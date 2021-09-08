@@ -1,0 +1,4 @@
+rootProject.name = 'mul2'
+include 'api'
+include 'batch'
+include 'common'
