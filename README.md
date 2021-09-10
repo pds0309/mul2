@@ -2,7 +2,7 @@
 springboot 2.4.5  gradle 6.8.3  멀티모듈 구성 연습
   
 ----
-[![Build Status](https://app.travis-ci.com/pds0309/mul2.svg?branch=master)](https://app.travis-ci.com/pds0309/mul2) [![Coverage Status](https://coveralls.io/repos/github/pds0309/mul2/badge.svg?branch=master)](https://coveralls.io/github/pds0309/mul2?branch=master)
+[![Build Status](https://app.travis-ci.com/pds0309/mul2.svg?branch=master)](https://app.travis-ci.com/pds0309/mul2) [![Coverage Status](https://coveralls.io/repos/github/pds0309/mul2/badge.svg?branch=master&kill_cache=1)](https://coveralls.io/github/pds0309/mul2?branch=master)
 
 <br>  
 
