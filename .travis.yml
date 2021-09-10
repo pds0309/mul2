@@ -13,6 +13,9 @@ cache:
     - "$HOME/.gradle"
 script: "./gradlew clean build --stacktrace"
 
+after_success:
+  - ./gradlew jacocoTestReport coveralls
+
 before_deploy:
   - zip -r multimodule *
   - mkdir -p multi
