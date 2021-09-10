@@ -90,6 +90,13 @@ task jacocoRootReport(type: JacocoReport) {
         html.enabled = true // human readable
         xml.enabled = true // required by coveralls
     }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect{
+            fileTree(dir: it, excludes: [
+                    "com/example/**/*Application.*"
+            ])
+        }))
+    }
 }
 
 coveralls {

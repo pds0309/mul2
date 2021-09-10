@@ -1,6 +1,8 @@
 # springbootmultimodule test
 springboot 2.4.5  gradle 6.8.3  멀티모듈 구성 연습
-
+  
+----
+[![Build Status](https://app.travis-ci.com/pds0309/mul2.svg?branch=master)](https://app.travis-ci.com/pds0309/mul2) [![Coverage Status](https://coveralls.io/repos/github/pds0309/mul2/badge.svg?branch=master)](https://coveralls.io/github/pds0309/mul2?branch=master)
 
 <br>  
 
@@ -19,7 +21,7 @@ springboot 2.4.5  gradle 6.8.3  멀티모듈 구성 연습
 
 > compile() , implementation() 모두 가능
 
-```gradle
+```groovy
 project(':api') {
     dependencies {
         compile project(':common')
@@ -31,7 +33,7 @@ project(':api') {
 
 > compile() 사용시 : Could not find method compile() for arguments Gradle
 
-```gradle
+```groovy
 project(':api') {
     dependencies {
         implementation project(':common')
@@ -51,3 +53,67 @@ project(':api') {
 * api 의 로직에서 (common 모듈의) repository를 받아올 수 있지만 save() findbyid() 같은 메소드를 사용할 수 없다.  
 
 <br> 
+
+**Jacoco , CoverAlls 추가**  
+  
+* 의존성 추가 후 subprojects 별 테스트
+
+```groovy
+    jacocoTestReport {
+        reports {
+            html.enabled = true // 개발자 확인용
+            xml.enabled = true // coveralls 전송용
+        }
+    }
+```
+
+* 서브프로젝트 리포트 종합하기
+```groovy
+task jacocoRootReport(type: JacocoReport) {
+    description = 'Generates an aggregate report from all subprojects'
+    dependsOn = subprojects.test
+    classDirectories.from = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories.from =  files(subprojects.sourceSets.main.output)
+    executionData.from = files(subprojects.jacocoTestReport.executionData)
+    reports {
+        html.enabled = true // human readable
+        xml.enabled = true // required by coveralls
+    }
+  //main 은 테스트커버리지에서 제외시킨다.
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect{
+            fileTree(dir: it, excludes: [
+                    "com/example/**/*Application.*"
+            ])
+        }))
+    }
+}
+```
+
+* 종합결과를 coveralls 로 전송한다
+
+```groovy
+coveralls {
+    sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+}
+```
+<br>  
+
+* .travis.yml 에서 빌드 성공 후 jacocoRootReport  실행 후 coveralls 실행
+
+```yaml
+after_success:
+  - ./gradlew jacocoRootReport coveralls
+```
+
+<br>  
+  
+**jacoco 리포트 보기**  
+
+```shell
+gradlew clean test jacocoRootReport jacocoTestCoverageVerification
+```
+
+* build/reports/jacoco/jacocoRootReport/html/index.html 에서 확인!
+

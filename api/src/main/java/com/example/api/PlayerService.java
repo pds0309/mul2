@@ -12,7 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlayerService {
 
-
     private final PlayerRepository playerRepository;
 
     public List<Player> getAllPlayers(){
