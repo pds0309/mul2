@@ -14,7 +14,7 @@ cache:
 script: "./gradlew clean build --stacktrace"
 
 after_success:
-  - ./gradlew jacocoTestReport coveralls
+  - ./gradlew jacocoRootReport coveralls
 
 before_deploy:
   - zip -r multimodule *
